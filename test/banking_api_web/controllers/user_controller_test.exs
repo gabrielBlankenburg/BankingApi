@@ -45,9 +45,9 @@ defmodule BankingApiWeb.UserControllerTest do
       conn = get(conn, Routes.user_path(conn, :index))
       # It's no longer empty since we have the admin user setted for the conn context
       assert conn
-        |> json_response(200)
-        |> Map.get("data")
-        |> is_list()
+             |> json_response(200)
+             |> Map.get("data")
+             |> is_list()
     end
   end
 
@@ -81,6 +81,7 @@ defmodule BankingApiWeb.UserControllerTest do
       conn = put(conn, Routes.user_path(conn, :update, user), user: @update_attrs)
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
       conn = get(conn, Routes.user_path(conn, :show, id))
+
       assert %{
                "id" => ^id,
                "balance" => 43,
