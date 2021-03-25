@@ -5,8 +5,22 @@ defmodule BankingApiWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :admin_profile_api do
+    plug :accepts, ["json"]
+    plug BankingApiWeb.Plugs.GuardianPipeline
+    plug BankingApiWeb.Plugs.AuthorizeProfile, :admin
+  end
+
   scope "/api", BankingApiWeb do
     pipe_through :api
+
+    post "/register", LoginController, :register
+    post "/login", LoginController, :login
+  end
+
+  scope "/api/admin", BankingApiWeb do
+    pipe_through :admin_profile_api
+    resources "/users", UserController, except: [:new, :edit]
   end
 
   # Enables LiveDashboard only for development
