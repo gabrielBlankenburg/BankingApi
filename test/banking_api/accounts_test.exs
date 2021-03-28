@@ -1,6 +1,7 @@
 defmodule BankingApi.AccountsTest do
   @moduledoc false
   use BankingApi.DataCase
+  import BankingApi.CommonFixtures
 
   alias BankingApi.Accounts
 
@@ -20,15 +21,6 @@ defmodule BankingApi.AccountsTest do
       profile: :admin
     }
     @invalid_attrs %{balance: nil, email: nil, password_hash: nil, profile: nil}
-
-    def user_fixture(attrs \\ %{}) do
-      {:ok, user} =
-        attrs
-        |> Enum.into(@valid_attrs)
-        |> Accounts.create_user()
-
-      user
-    end
 
     test "list_users/0 returns all users" do
       user =

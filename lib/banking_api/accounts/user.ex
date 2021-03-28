@@ -15,12 +15,20 @@ defmodule BankingApi.Accounts.User do
   end
 
   @doc false
+  def create_changeset(user, attrs) do
+    user
+    |> changeset(attrs)
+    |> validate_required([:password])
+  end
+
+  @doc false
   def changeset(user, attrs) do
     user
     |> cast(attrs, [:email, :password, :profile, :balance])
-    |> validate_required([:email, :password])
+    |> validate_required([:email])
     |> unique_constraint(:email)
     |> put_password_hash
+    |> validate_number(:balance, greater_than_or_equal_to: 0)
   end
 
   defp put_password_hash(

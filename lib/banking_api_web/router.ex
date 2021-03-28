@@ -11,11 +11,21 @@ defmodule BankingApiWeb.Router do
     plug BankingApiWeb.Plugs.AuthorizeProfile, :admin
   end
 
+  pipeline :user_profile_api do
+    plug :accepts, ["json"]
+    plug BankingApiWeb.Plugs.GuardianPipeline
+    plug BankingApiWeb.Plugs.AuthorizeProfile, :user
+  end
+
   scope "/api", BankingApiWeb do
     pipe_through :api
-
     post "/register", LoginController, :register
     post "/login", LoginController, :login
+  end
+
+  scope "/api", BankingApiWeb do
+    pipe_through :user_profile_api
+    post "/withdrawal", WithdrawalController, :create
   end
 
   scope "/api/admin", BankingApiWeb do

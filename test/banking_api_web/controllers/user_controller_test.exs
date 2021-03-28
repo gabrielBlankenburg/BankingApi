@@ -1,8 +1,8 @@
 defmodule BankingApiWeb.UserControllerTest do
   @moduledoc false
   use BankingApiWeb.ConnCase
+  import BankingApi.CommonFixtures
 
-  alias BankingApi.Accounts
   alias BankingApi.Accounts.{User, Guardian}
 
   @create_attrs %{
@@ -19,17 +19,8 @@ defmodule BankingApiWeb.UserControllerTest do
   }
   @invalid_attrs %{balance: nil, email: nil, password_hash: nil, profile: nil}
 
-  def fixture(:user, attrs \\ %{}) do
-    {:ok, user} =
-      attrs
-      |> Enum.into(@create_attrs)
-      |> Accounts.create_user()
-
-    user
-  end
-
   setup %{conn: conn} do
-    admin_user = fixture(:user, %{profile: :admin, email: "admin@user.com", password: "admin123"})
+    admin_user = user_fixture(%{profile: :admin, email: "admin@user.com", password: "admin123"})
     {:ok, token, _} = Guardian.encode_and_sign(admin_user)
 
     conn =
@@ -112,7 +103,7 @@ defmodule BankingApiWeb.UserControllerTest do
   end
 
   defp create_user(_) do
-    user = fixture(:user)
+    user = user_fixture()
     %{user: user}
   end
 end
