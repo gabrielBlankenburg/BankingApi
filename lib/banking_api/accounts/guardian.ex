@@ -21,14 +21,14 @@ defmodule BankingApi.Accounts.Guardian do
   end
 
   @impl true
-  @spec resource_from_claims(map) :: {:ok, any}
   def resource_from_claims(claims) do
-    user =
-      claims
-      |> Map.get("sub")
-      |> Accounts.get_user!()
-
-    {:ok, user}
+    with resource <- Map.get(claims, "sub"),
+         user when not is_nil(user) <- Accounts.get_user(resource) do
+      {:ok, user}
+    else
+      _ ->
+        {:error, :not_found}
+    end
   end
 
   @impl true

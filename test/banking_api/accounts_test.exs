@@ -30,6 +30,11 @@ defmodule BankingApi.AccountsTest do
       assert Accounts.list_users() == [user]
     end
 
+    test "get_user/1 returns the user with given id" do
+      user = user_fixture()
+      assert Accounts.get_user(user.id) == Map.put(user, :password, nil)
+    end
+
     test "get_user!/1 returns the user with given id" do
       user = user_fixture()
       assert Accounts.get_user!(user.id) == Map.put(user, :password, nil)

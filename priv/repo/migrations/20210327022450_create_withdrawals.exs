@@ -12,6 +12,6 @@ defmodule BankingApi.Repo.Migrations.CreateWithdrawals do
     end
 
     create index(:withdrawals, [:user_id])
-    create unique_index(:withdrawals, [:idempotency_key, :status], name: "success_idempotency_key", where: "status = 'success'")
+    create unique_index(:withdrawals, [:idempotency_key, :status], name: "withdrawals_success_idempotency_key", where: "status = 'success'")
   end
 end

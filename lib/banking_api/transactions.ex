@@ -1,11 +1,14 @@
 defmodule BankingApi.Transactions do
   @moduledoc """
   The Transactions context.
+  This context is currently responsible for handling withdrawals and transfers executions.
+  Both withdrawals and transfers have their whole CRUD (except the delete) in here plus the insert business rules.
+  NOTE: The deletion functions were removed because we want to keep log of everything.
   """
 
   import Ecto.Query, warn: false
   alias BankingApi.Repo
-  alias BankingApi.Transactions.Withdrawal
+  alias BankingApi.Transactions.{Withdrawal, Transfer}
   alias Phoenix.PubSub
 
   @doc """
@@ -87,6 +90,86 @@ defmodule BankingApi.Transactions do
     Withdrawal.changeset(withdrawal, attrs)
   end
 
+  alias BankingApi.Transactions.Transfer
+
+  @doc """
+  Returns the list of transfers.
+
+  ## Examples
+
+      iex> list_transfers()
+      [%Transfer{}, ...]
+
+  """
+  def list_transfers do
+    Repo.all(Transfer)
+  end
+
+  @doc """
+  Gets a single transfer.
+
+  Raises `Ecto.NoResultsError` if the Transfer does not exist.
+
+  ## Examples
+
+      iex> get_transfer!(123)
+      %Transfer{}
+
+      iex> get_transfer!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_transfer!(id), do: Repo.get!(Transfer, id)
+
+  @doc """
+  Creates a transfer.
+
+  ## Examples
+
+      iex> create_transfer(%{field: value})
+      {:ok, %Transfer{}}
+
+      iex> create_transfer(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_transfer(attrs \\ %{}) do
+    %Transfer{}
+    |> Transfer.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a transfer.
+
+  ## Examples
+
+      {:ok, %Transfer{}}
+      iex> update_transfer(transfer, %{field: new_value})
+
+      iex> update_transfer(transfer, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_transfer(%Transfer{} = transfer, attrs) do
+    transfer
+    |> Transfer.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking transfer changes.
+
+  ## Examples
+
+      iex> change_transfer(transfer)
+      %Ecto.Changeset{data: %Transfer{}}
+
+  """
+  def change_transfer(%Transfer{} = transfer, attrs \\ %{}) do
+    Transfer.changeset(transfer, attrs)
+  end
+
   @doc """
   Executes the `BankingApi.Transactions.Withdrawal.create_transaction` and handles its return.
   In case of success, an email is sent and a new message is sent to every process listening to the topic `"transactions"`.
@@ -102,34 +185,75 @@ defmodule BankingApi.Transactions do
   def create_withdrawal_transaction(attrs \\ %{}) do
     attrs
     |> Enum.into(%{"status" => :success})
-    |> Withdrawal.create_transaction()
-    |> Repo.transaction()
-    |> handle_withdrawal_transaction(attrs)
+    |> create_transaction(Withdrawal)
   end
 
-  defp handle_withdrawal_transaction({:ok, data}, _) do
-    PubSub.broadcast(BankingApi.PubSub, "transactions", {:withdrawal, :success, data})
+  @doc """
+  Similar to `create_withdrawal_transaction/1`, but creates a transfer instead
+  """
+  def create_transfer_transaction(attrs \\ %{}) do
+    attrs
+    |> Enum.into(%{"status" => :success})
+    |> create_transaction(Transfer)
+  end
+
+  defp create_transaction(attrs, module) do
+    attrs
+    |> module.create_transaction()
+    |> Repo.transaction()
+    |> handle_transaction(attrs, module)
+  end
+
+  defp handle_transaction({:ok, data}, _, Transfer) do
+    broadcast_transaction(Transfer, :success, data)
+
+    {:ok,
+     %{transaction: Map.get(data, :transaction), updated_user: Map.get(data, :updated_from_user)}}
+  end
+
+  defp handle_transaction({:ok, data}, _, Withdrawal) do
+    broadcast_transaction(Withdrawal, :success, data)
     {:ok, %{transaction: Map.get(data, :transaction), updated_user: Map.get(data, :updated_user)}}
   end
 
   # Returns the transaction with the given idempotency_key.
-  defp handle_withdrawal_transaction(
+  defp handle_transaction(
          {:error, :check_idempotency_key, :already_taken, %{transaction: transaction}},
-         _
+         _,
+         module
        ) do
     key = Map.get(transaction, :idempotency_key)
-    previous_transaction = Repo.get_by!(Withdrawal, idempotency_key: key, status: :success)
+
+    previous_transaction = Repo.get_by!(module, idempotency_key: key, status: :success)
+
     {:error, {:transaction_already_finished, previous_transaction}}
   end
 
-  defp handle_withdrawal_transaction(
+  defp handle_transaction(
          {:error, _step, data, _},
-         attrs
+         attrs,
+         Withdrawal
        ) do
-    attrs
-    |> Enum.into(%{"status" => :fail})
+    %{"status" => :fail}
+    |> Enum.into(attrs)
     |> create_withdrawal()
 
     {:error, data}
+  end
+
+  defp handle_transaction(
+         {:error, _step, data, _},
+         attrs,
+         Transfer
+       ) do
+    %{"status" => :fail}
+    |> Enum.into(attrs)
+    |> create_transfer()
+
+    {:error, data}
+  end
+
+  defp broadcast_transaction(module, status, data) do
+    PubSub.broadcast(BankingApi.PubSub, "transactions", {module, status, data})
   end
 end

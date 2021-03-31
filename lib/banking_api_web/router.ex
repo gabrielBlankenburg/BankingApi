@@ -26,6 +26,7 @@ defmodule BankingApiWeb.Router do
   scope "/api", BankingApiWeb do
     pipe_through :user_profile_api
     post "/withdrawal", WithdrawalController, :create
+    post "/transfer", TransferController, :create
   end
 
   scope "/api/admin", BankingApiWeb do
