@@ -16,15 +16,6 @@ defmodule BankingApi.TransactionsTest do
     @update_attrs %{amount: 43, idempotency_key: "some updated idempotency_key", status: :success}
     @invalid_attrs %{amount: nil, idempotency_key: nil, status: nil}
 
-    def withdrawal_fixture(attrs \\ %{}) do
-      {:ok, withdrawal} =
-        attrs
-        |> Enum.into(@valid_attrs)
-        |> Transactions.create_withdrawal()
-
-      withdrawal
-    end
-
     test "list_withdrawals/0 returns all withdrawals", %{user: user} do
       withdrawal = withdrawal_fixture(%{user_id: user.id})
       assert Transactions.list_withdrawals() == [withdrawal]
@@ -149,15 +140,6 @@ defmodule BankingApi.TransactionsTest do
       status: :success
     }
     @invalid_attrs %{amount: nil, idempotency_key: nil, status: nil}
-
-    def transfer_fixture(attrs \\ %{}) do
-      {:ok, transfer} =
-        attrs
-        |> Enum.into(@valid_attrs)
-        |> Transactions.create_transfer()
-
-      transfer
-    end
 
     test "list_transfers/0 returns all transfers", %{from: from, to: to} do
       transfer = transfer_fixture(%{from: from, to: to})

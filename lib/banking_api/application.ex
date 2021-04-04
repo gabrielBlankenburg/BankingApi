@@ -14,9 +14,10 @@ defmodule BankingApi.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: BankingApi.PubSub},
       # Start the Endpoint (http/https)
-      BankingApiWeb.Endpoint
+      BankingApiWeb.Endpoint,
       # Start a worker by calling: BankingApi.Worker.start_link(arg)
       # {BankingApi.Worker, arg}
+      BankingApi.Reports.CacheSupervisor
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

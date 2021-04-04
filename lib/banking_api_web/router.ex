@@ -32,6 +32,7 @@ defmodule BankingApiWeb.Router do
   scope "/api/admin", BankingApiWeb do
     pipe_through :admin_profile_api
     resources "/users", UserController, except: [:new, :edit]
+    get "/reports/transaction/:period", TransactionReportController, :period
   end
 
   # Enables LiveDashboard only for development
