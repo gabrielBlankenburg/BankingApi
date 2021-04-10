@@ -1,7 +1,9 @@
 defmodule BankingApi.Reports.TransactionsCache do
   @moduledoc """
   Caches for the Transactions Reports for specific periods.
-  The periods are based on the transactions `:inserted_at` field
+  The periods are based on the transactions `:inserted_at` field.
+  Both `get_period/1` and `get_period_in_range/3` attempts to get values from the corresponding cache worker. If this one is not available, then
+  the functions just fetches the values from database.
   """
   use GenServer
   alias Phoenix.PubSub

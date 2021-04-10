@@ -1,6 +1,7 @@
 defmodule BankingApi.Reports.CacheSupervisor do
   @moduledoc """
-  Starts the Reports Caches
+  Starts the Reports Caches.
+  This supervisor is meant to start a `BankingApi.Reports.TransactionsCache` for each valid period.
   """
   use Supervisor
   alias BankingApi.Reports.TransactionsCache

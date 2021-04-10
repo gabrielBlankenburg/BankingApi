@@ -10,7 +10,7 @@ defmodule BankingApi.Reports do
   @valid_periods [:daily, :monthly, :yearly, :total]
 
   @doc """
-  Fetches the reports by period from transferts and withdrawals, then concatenate them suming the values for each period
+  Fetches the reports by period from transfers and withdrawals, then concatenate them incrementing the values for each period
   """
   def build_transactions_report(:total) do
     Withdraw
@@ -69,7 +69,7 @@ defmodule BankingApi.Reports do
 
   def get_transaction_report_by_period_in_range(period, _, _), do: invalid_period_error(period)
 
-  # The try catch is necessary because the String.to_existing_atom/1 raises an error
+  # The try catch is necessary because String.to_existing_atom/1 raises an error
   # if the atom doesn't exist. It's not a good idea just using String.to_atom/1 since
   # these data are mostly coming from external requests and atoms aren't garbage collected.
   defp get_atom_period(period) do

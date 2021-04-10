@@ -1,6 +1,6 @@
 defmodule BankingApi.Accounts.Guardian do
   @moduledoc """
-  The implementations module for `Guardian`. It generates the token and get its claims
+  The implementation module for `Guardian`. It generates the token and get its claims
   """
   use Guardian, otp_app: :banking_api
   alias BankingApi.Accounts

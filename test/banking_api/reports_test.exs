@@ -2,6 +2,7 @@ defmodule BankingApi.ReportsTest do
   use BankingApi.DataCase
   import BankingApi.CommonFixtures
   alias BankingApi.{Repo, Reports}
+  alias BankingApi.Reports.CacheSupervisor
 
   describe "Transactions report without persisted data" do
     test "build_transactions_report/1 with :total returns %{total: 0}" do
@@ -35,7 +36,7 @@ defmodule BankingApi.ReportsTest do
       assert Reports.get_transaction_report_by_period("invalid") == {:error, :invalid_period}
     end
   end
-
+ 
   describe "Transactions report with persisted data" do
     setup do
       user1 = user_fixture(%{amount: 10_000, email: "user1@email.com"})
@@ -112,6 +113,23 @@ defmodule BankingApi.ReportsTest do
     } do
       assert Reports.get_transaction_report_by_period(:daily) == {:ok, [{date, 4_000}]}
       assert Reports.get_transaction_report_by_period("daily") == {:ok, [{date, 4_000}]}
+    end
+    
+    test "get_transaction_report_by_period_in_range/3 when receiving :daily period and the range containing reports returns a tuple with :ok and list of reports", %{fixture_date: date} do
+      assert Reports.get_transaction_report_by_period_in_range(:daily, date, date) == {:ok, [{date, 4_000}]} 
+      assert Reports.get_transaction_report_by_period_in_range("daily", date, date) == {:ok, [{date, 4_000}]} 
+    end
+    
+    test "get_transaction_report_by_period_in_range/3 when receiving :daily period and the range containing reports returns a tuple with :ok and an empty list ", %{fixture_date: date} do
+      # Two days before the current one
+      date = Date.add(date, -2)
+      assert Reports.get_transaction_report_by_period_in_range(:daily, date, date) == {:ok, []} 
+      assert Reports.get_transaction_report_by_period_in_range("daily", date, date) == {:ok, []} 
+    end
+
+    test "get_transaction_report_by_period_in_range/3 when receiving an invalid period returns a tuple with {:error, :invalid_period}", %{fixture_date: date} do
+      assert Reports.get_transaction_report_by_period_in_range(:invalid, date, date) == {:error, :invalid_period} 
+      assert Reports.get_transaction_report_by_period_in_range("invalid", date, date) == {:error, :invalid_period} 
     end
   end
 end

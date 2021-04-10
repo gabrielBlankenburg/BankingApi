@@ -1,6 +1,6 @@
 defmodule BankingApi.Transactions.Withdraw do
   @moduledoc """
-  Withdrawl
+  Withdraw
   """
   use Ecto.Schema
   import Ecto.Changeset
@@ -30,7 +30,9 @@ defmodule BankingApi.Transactions.Withdraw do
     |> validate_number(:amount, greater_than: 0)
   end
 
-  @doc false
+  @doc """
+  The default changeset, checks just the types, mandatory fields and indexes.
+  """
   def changeset(withdraw, attrs) do
     withdraw
     |> cast(attrs, [:user_id, :amount, :status, :idempotency_key])

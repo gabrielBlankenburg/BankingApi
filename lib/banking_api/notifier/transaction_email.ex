@@ -1,7 +1,7 @@
 defmodule BankingApi.Notifier.TransactionEmail do
   @moduledoc """
   A helper for mocking the transactions emails.
-  The `notify/1` is the entrypoint that handles any email we need.
+  The `notify/1` is the entrypoint that handles any transaction email we need.
   """
   alias BankingApi.Transactions.{Transfer, Withdraw}
   alias BankingApi.{Money, Repo}
