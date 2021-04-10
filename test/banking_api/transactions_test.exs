@@ -6,7 +6,7 @@ defmodule BankingApi.TransactionsTest do
   alias BankingApi.Accounts
 
   describe "withdrawals" do
-    alias BankingApi.Transactions.Withdrawal
+    alias BankingApi.Transactions.Withdraw
 
     setup do
       %{user: user_fixture()}
@@ -17,62 +17,60 @@ defmodule BankingApi.TransactionsTest do
     @invalid_attrs %{amount: nil, idempotency_key: nil, status: nil}
 
     test "list_withdrawals/0 returns all withdrawals", %{user: user} do
-      withdrawal = withdrawal_fixture(%{user_id: user.id})
-      assert Transactions.list_withdrawals() == [withdrawal]
+      withdraw = withdraw_fixture(%{user_id: user.id})
+      assert Transactions.list_withdrawals() == [withdraw]
     end
 
-    test "get_withdrawal!/1 returns the withdrawal with given id", %{user: user} do
-      withdrawal = withdrawal_fixture(%{user_id: user.id})
-      assert Transactions.get_withdrawal!(withdrawal.id) == withdrawal
+    test "get_withdraw!/1 returns the withdraw with given id", %{user: user} do
+      withdraw = withdraw_fixture(%{user_id: user.id})
+      assert Transactions.get_withdraw!(withdraw.id) == withdraw
     end
 
-    test "create_withdrawal/1 with valid data creates a withdrawal", %{user: user} do
-      assert {:ok, %Withdrawal{} = withdrawal} =
+    test "create_withdraw/1 with valid data creates a withdraw", %{user: user} do
+      assert {:ok, %Withdraw{} = withdraw} =
                @valid_attrs
                |> Enum.into(%{user_id: user.id})
-               |> Transactions.create_withdrawal()
+               |> Transactions.create_withdraw()
 
-      assert withdrawal.amount == 42
-      assert withdrawal.idempotency_key == "some idempotency_key"
-      assert withdrawal.status == :success
+      assert withdraw.amount == 42
+      assert withdraw.idempotency_key == "some idempotency_key"
+      assert withdraw.status == :success
     end
 
-    test "create_withdrawal/1 with invalid data returns error changeset", _ do
-      assert {:error, %Ecto.Changeset{}} = Transactions.create_withdrawal(@invalid_attrs)
+    test "create_withdraw/1 with invalid data returns error changeset", _ do
+      assert {:error, %Ecto.Changeset{}} = Transactions.create_withdraw(@invalid_attrs)
     end
 
-    test "update_withdrawal/2 with valid data updates the withdrawal", %{user: user} do
-      withdrawal = withdrawal_fixture(%{user_id: user.id})
+    test "update_withdraw/2 with valid data updates the withdraw", %{user: user} do
+      withdraw = withdraw_fixture(%{user_id: user.id})
 
-      assert {:ok, %Withdrawal{} = withdrawal} =
-               Transactions.update_withdrawal(withdrawal, @update_attrs)
+      assert {:ok, %Withdraw{} = withdraw} = Transactions.update_withdraw(withdraw, @update_attrs)
 
-      assert withdrawal.amount == 43
-      assert withdrawal.idempotency_key == "some updated idempotency_key"
-      assert withdrawal.status == :success
+      assert withdraw.amount == 43
+      assert withdraw.idempotency_key == "some updated idempotency_key"
+      assert withdraw.status == :success
     end
 
-    test "update_withdrawal/2 with invalid data returns error changeset", %{user: user} do
-      withdrawal = withdrawal_fixture(%{user_id: user.id})
+    test "update_withdraw/2 with invalid data returns error changeset", %{user: user} do
+      withdraw = withdraw_fixture(%{user_id: user.id})
 
-      assert {:error, %Ecto.Changeset{}} =
-               Transactions.update_withdrawal(withdrawal, @invalid_attrs)
+      assert {:error, %Ecto.Changeset{}} = Transactions.update_withdraw(withdraw, @invalid_attrs)
 
-      assert withdrawal == Transactions.get_withdrawal!(withdrawal.id)
+      assert withdraw == Transactions.get_withdraw!(withdraw.id)
     end
 
-    test "change_withdrawal/1 returns a withdrawal changeset", %{user: user} do
-      withdrawal = withdrawal_fixture(%{user_id: user.id})
-      assert %Ecto.Changeset{} = Transactions.change_withdrawal(withdrawal)
+    test "change_withdraw/1 returns a withdraw changeset", %{user: user} do
+      withdraw = withdraw_fixture(%{user_id: user.id})
+      assert %Ecto.Changeset{} = Transactions.change_withdraw(withdraw)
     end
   end
 
   describe "withdrawals transactions" do
-    test "create_withdrawal_transaction/1 with valid data decrements user balance returning the updated user and transaction" do
+    test "create_withdraw_transaction/1 with valid data decrements user balance returning the updated user and transaction" do
       user = user_fixture(%{email: "valid_transaction@email.com", balance: 10_000})
 
       assert {:ok, %{transaction: transaction, updated_user: updated_user}} =
-               Transactions.create_withdrawal_transaction(%{
+               Transactions.create_withdraw_transaction(%{
                  "amount" => 1_000,
                  "idempotency_key" => "valid transaction",
                  "user_id" => user.id
@@ -86,11 +84,11 @@ defmodule BankingApi.TransactionsTest do
       assert updated_user.balance == 9_000
     end
 
-    test "create_withdrawal_transaction/1 when user doesn't have enough ballance returns an error" do
+    test "create_withdraw_transaction/1 when user doesn't have enough ballance returns an error" do
       user = user_fixture(%{email: "valid_transaction@email.com", balance: 1_000})
 
       assert {:error, %Ecto.Changeset{}} =
-               Transactions.create_withdrawal_transaction(%{
+               Transactions.create_withdraw_transaction(%{
                  "amount" => 2_000,
                  "idempotency_key" => "invalid balance",
                  "user_id" => user.id
@@ -99,7 +97,7 @@ defmodule BankingApi.TransactionsTest do
       assert Accounts.get_user!(user.id) == Map.put(user, :password, nil)
     end
 
-    test "create_withdrawal_transaction/1 when idempotency is duplicated and status is :success will return an error" do
+    test "create_withdraw_transaction/1 when idempotency is duplicated and status is :success will return an error" do
       user = user_fixture(%{email: "idempotency_transaction@email.com", balance: 10_000})
 
       attrs = %{
@@ -111,13 +109,12 @@ defmodule BankingApi.TransactionsTest do
       assert {:error, _} =
                attrs
                |> Map.put("amount", -1)
-               |> Transactions.create_withdrawal_transaction()
+               |> Transactions.create_withdraw_transaction()
 
-      assert {:ok, %{transaction: transaction}} =
-               Transactions.create_withdrawal_transaction(attrs)
+      assert {:ok, %{transaction: transaction}} = Transactions.create_withdraw_transaction(attrs)
 
       assert {:error, {:transaction_already_finished, previous_transaction}} =
-               Transactions.create_withdrawal_transaction(attrs)
+               Transactions.create_withdraw_transaction(attrs)
 
       assert previous_transaction == transaction
     end

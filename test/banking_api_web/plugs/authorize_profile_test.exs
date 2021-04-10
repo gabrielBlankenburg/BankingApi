@@ -33,7 +33,7 @@ defmodule BankingApiWeb.Plugs.AuthorizeProfileTest do
     test "is allowed on routes for user profiles", %{conn: conn, user: user} do
       assert conn
              |> bypass_through(BankingApiWeb.Router)
-             |> post("/api/withdrawal")
+             |> post("/api/withdraw")
              |> Map.get(:assigns)
              |> Map.get(:user_id) == user.id
     end
@@ -62,7 +62,7 @@ defmodule BankingApiWeb.Plugs.AuthorizeProfileTest do
     test "is allowed on routes for user profiles", %{conn: conn, user: user} do
       assert conn
              |> bypass_through(BankingApiWeb.Router)
-             |> post("/api/withdrawal")
+             |> post("/api/withdraw")
              |> Map.get(:assigns)
              |> Map.get(:user_id) == user.id
     end

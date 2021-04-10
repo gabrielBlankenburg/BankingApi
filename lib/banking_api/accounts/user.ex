@@ -8,6 +8,7 @@ defmodule BankingApi.Accounts.User do
   schema "users" do
     field :balance, :integer
     field :email, :string
+    field :name, :string
     field :password_hash, :string
     field :profile, Ecto.Enum, values: [:admin, :user]
     field :password, :string, virtual: true
@@ -24,8 +25,8 @@ defmodule BankingApi.Accounts.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:email, :password, :profile, :balance])
-    |> validate_required([:email])
+    |> cast(attrs, [:name, :email, :password, :profile, :balance])
+    |> validate_required([:email, :name])
     |> unique_constraint(:email)
     |> put_password_hash
     |> validate_number(:balance, greater_than_or_equal_to: 0)

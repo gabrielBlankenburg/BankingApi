@@ -1,4 +1,12 @@
 defmodule BankingApi.Transactions.Transfer do
+  @moduledoc """
+  The Transfer Schema.
+  It has a behaviour of BankingApi.Transactions.Behaviour.
+  For business rule validations use the `user_changeset/2`, for checking just the types and indexes (useful for saving
+  errors) use the `changeset/2`.
+  The `create_transaction/1` is useful for creating a transaction that make multiples queries and respect our business
+  rules.
+  """
   use Ecto.Schema
   import Ecto.Changeset
   alias Ecto.Multi
@@ -11,8 +19,8 @@ defmodule BankingApi.Transactions.Transfer do
     field :amount, :integer
     field :idempotency_key, :string
     field :status, Ecto.Enum, values: [:success, :fail]
-    field :from, :id
-    field :to, :id
+    belongs_to :from_user, User, foreign_key: :from
+    belongs_to :to_user, User, foreign_key: :to
 
     timestamps()
   end
@@ -20,7 +28,7 @@ defmodule BankingApi.Transactions.Transfer do
   @doc """
   This changeset is meant to be called when the user is trying to make a transfer.
   This cannot be used as the main changeset function because `:fail` validations would never be able to be
-  persisted since this changeset is what makes a withdrawal fail.
+  persisted since this changeset is what makes a withdraw fail.
   """
   def user_changeset(transfer, attrs) do
     transfer
@@ -28,7 +36,9 @@ defmodule BankingApi.Transactions.Transfer do
     |> validate_number(:amount, greater_than: 0)
   end
 
-  @doc false
+  @doc """
+  The default changeset, checks just the types, mandatory fields and indexes.
+  """
   def changeset(transfer, attrs) do
     transfer
     |> cast(attrs, [:amount, :idempotency_key, :status, :from, :to])

@@ -30,11 +30,12 @@ defmodule BankingApiWeb.TransactionReportController do
   end
 
   def period(conn, %{"period" => period}) do
-    with {:ok, data} <- Reports.get_transaction_report_by_period(period) do
-      conn
-      |> put_status(:ok)
-      |> render("show.json", data: data)
-    else
+    case Reports.get_transaction_report_by_period(period) do
+      {:ok, data} ->
+        conn
+        |> put_status(:ok)
+        |> render("show.json", data: data)
+
       _ ->
         {:error, :not_found}
     end

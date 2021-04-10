@@ -1,24 +1,17 @@
 defmodule BankingApiWeb.LoginControllerTest do
   @moduledoc false
   use BankingApiWeb.ConnCase
+  import BankingApi.CommonFixtures
   alias BankingApi.Accounts
 
   @user_attrs %{
     email: "test@email.com",
+    name: "Some User",
     password: "some password_hash"
   }
 
   setup %{conn: conn} do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
-  end
-
-  def user_fixture(attrs \\ %{}) do
-    {:ok, user} =
-      attrs
-      |> Enum.into(@user_attrs)
-      |> Accounts.create_user()
-
-    user
   end
 
   describe "Register and Login" do
@@ -30,6 +23,7 @@ defmodule BankingApiWeb.LoginControllerTest do
       assert %{
                "user" => %{
                  "balance" => 100_000,
+                 "name" => "Some User",
                  "email" => "test@email.com",
                  "profile" => "user"
                },
@@ -45,6 +39,7 @@ defmodule BankingApiWeb.LoginControllerTest do
       conn =
         post(conn, Routes.login_path(conn, :register), %{
           email: "duplicate@email.com",
+          name: "Some User",
           password: "some password"
         })
 

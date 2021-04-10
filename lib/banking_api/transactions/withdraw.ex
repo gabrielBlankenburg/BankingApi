@@ -1,4 +1,7 @@
-defmodule BankingApi.Transactions.Withdrawal do
+defmodule BankingApi.Transactions.Withdraw do
+  @moduledoc """
+  Withdrawl
+  """
   use Ecto.Schema
   import Ecto.Changeset
   alias Ecto.Multi
@@ -11,34 +14,34 @@ defmodule BankingApi.Transactions.Withdrawal do
     field :amount, :integer
     field :idempotency_key, :string
     field :status, Ecto.Enum, values: [:success, :fail]
-    field :user_id, :id
+    belongs_to :user, User, foreign_key: :user_id
 
     timestamps()
   end
 
   @doc """
-  This changeset is meant to be called when the user is trying to make a withdrawal.
+  This changeset is meant to be called when the user is trying to make a withdraw.
   This cannot be used as the main changeset function because `:fail` validations would never be able to be
-  persisted since this changeset is what makes a withdrawal fail.
+  persisted since this changeset is what makes a withdraw fail.
   """
-  def user_changeset(withdrawal, attrs) do
-    withdrawal
+  def user_changeset(withdraw, attrs) do
+    withdraw
     |> changeset(attrs)
     |> validate_number(:amount, greater_than: 0)
   end
 
   @doc false
-  def changeset(withdrawal, attrs) do
-    withdrawal
+  def changeset(withdraw, attrs) do
+    withdraw
     |> cast(attrs, [:user_id, :amount, :status, :idempotency_key])
     |> validate_required([:user_id, :amount, :status, :idempotency_key])
     |> foreign_key_constraint(:user_id)
   end
 
   @doc """
-  Execute every withdrawal database step, if any of them fail, rollback the previous ones.
+  Execute every withdraw database step, if any of them fail, rollback the previous ones.
   The steps are:
-  1) Attempts to insert the withdrawal using the `user_changeset/2` validations and checking the "success_idempotency_key" index
+  1) Attempts to insert the withdraw using the `user_changeset/2` validations and checking the "success_idempotency_key" index
   that prevents duplicated `:idempotency_key` with the `:status` field setted as `:success`. If that is the case, there will
   be no changes on database, what also means that no errors will be returned, but the returned changeset will have a `nil` id.
   NOTE: The non `:success` status doesn't prevent the same `:idempotency_key` to be persisted since the failures just persists

@@ -44,16 +44,16 @@ defmodule BankingApi.ReportsTest do
       # Creates 2 withdrawals with success, 1 with failure, 2 transfers with succes, 1 with failure
       # each one attempting to do a transaction of R$ 10.00.
       # The total successfully amount is R$ 40.00.
-      withdrawal_fixture(%{user_id: user1.id, amount: 1_000, idempotency_key: "withdrawal 1"})
+      withdraw_fixture(%{user_id: user1.id, amount: 1_000, idempotency_key: "withdraw 1"})
 
-      withdrawal_fixture(%{
+      withdraw_fixture(%{
         user_id: user1.id,
         amount: 1_000,
-        idempotency_key: "withdrawal 1",
+        idempotency_key: "withdraw 1",
         status: :fail
       })
 
-      withdrawal_fixture(%{user_id: user2.id, amount: 1_000, idempotency_key: "withdrawal 2"})
+      withdraw_fixture(%{user_id: user2.id, amount: 1_000, idempotency_key: "withdraw 2"})
 
       transfer_fixture(%{
         from: user1.id,

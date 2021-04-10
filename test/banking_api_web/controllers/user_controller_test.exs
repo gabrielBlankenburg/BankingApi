@@ -7,12 +7,14 @@ defmodule BankingApiWeb.UserControllerTest do
 
   @create_attrs %{
     balance: 42,
+    name: "Some User",
     email: "test@email.com",
     password: "some password_hash",
     profile: :user
   }
   @update_attrs %{
     balance: 43,
+    name: "Some User",
     email: "update@email.com",
     password: "some updated password_hash",
     profile: :user

@@ -18,7 +18,7 @@ defmodule BankingApiWeb.Plugs.AuthorizeProfile do
   end
 
   # If the user is admin he may access any endpoint, if he is not an admin, his profile must match with
-  # the required one
+  # the required one.
   defp handle_profile(%User{profile: user_profile, id: id}, conn, profile)
        when user_profile == :admin or profile == user_profile do
     assign(conn, :user_id, id)

@@ -11,16 +11,18 @@ defmodule BankingApi.AccountsTest do
     @valid_attrs %{
       balance: 42,
       email: "some email",
+      name: "Some User",
       password: "some password_hash",
       profile: :user
     }
     @update_attrs %{
       balance: 43,
       email: "some updated email",
+      name: "Updated User",
       password: "some updated password_hash",
       profile: :admin
     }
-    @invalid_attrs %{balance: nil, email: nil, password_hash: nil, profile: nil}
+    @invalid_attrs %{balance: nil, email: nil, name: nil, password_hash: nil, profile: nil}
 
     test "list_users/0 returns all users" do
       user =

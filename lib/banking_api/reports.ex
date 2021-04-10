@@ -2,7 +2,7 @@ defmodule BankingApi.Reports do
   @moduledoc """
   Context for reports
   """
-  alias BankingApi.Transactions.{Transfer, Withdrawal}
+  alias BankingApi.Transactions.{Transfer, Withdraw}
   alias BankingApi.Repo
   alias BankingApi.Reports.TransactionsCache
   import Ecto.Query
@@ -13,7 +13,7 @@ defmodule BankingApi.Reports do
   Fetches the reports by period from transferts and withdrawals, then concatenate them suming the values for each period
   """
   def build_transactions_report(:total) do
-    Withdrawal
+    Withdraw
     |> transaction_query_total()
     |> Stream.concat(transaction_query_total(Transfer))
     |> Enum.reduce(%{total: 0}, fn
@@ -26,7 +26,7 @@ defmodule BankingApi.Reports do
   end
 
   def build_transactions_report(period) when period in @valid_periods do
-    withdrawals = transaction_query_all(Withdrawal, period)
+    withdrawals = transaction_query_all(Withdraw, period)
     transfers = transaction_query_all(Transfer, period)
 
     withdrawals

@@ -8,7 +8,8 @@ defmodule BankingApi.Transactions do
 
   import Ecto.Query, warn: false
   alias BankingApi.Repo
-  alias BankingApi.Transactions.{Withdrawal, Transfer}
+  alias BankingApi.Transactions.{Withdraw, Transfer}
+  alias BankingApi.Notifier.TransactionEmail
   alias Phoenix.PubSub
 
   @doc """
@@ -17,77 +18,77 @@ defmodule BankingApi.Transactions do
   ## Examples
 
       iex> list_withdrawals()
-      [%Withdrawal{}, ...]
+      [%Withdraw{}, ...]
 
   """
   def list_withdrawals do
-    Repo.all(Withdrawal)
+    Repo.all(Withdraw)
   end
 
   @doc """
-  Gets a single withdrawal.
+  Gets a single withdraw.
 
-  Raises `Ecto.NoResultsError` if the Withdrawal does not exist.
+  Raises `Ecto.NoResultsError` if the withdraw does not exist.
 
   ## Examples
 
-      iex> get_withdrawal!(123)
-      %Withdrawal{}
+      iex> get_withdraw!(123)
+      %Withdraw{}
 
-      iex> get_withdrawal!(456)
+      iex> get_withdraw!(456)
       ** (Ecto.NoResultsError)
 
   """
-  def get_withdrawal!(id), do: Repo.get!(Withdrawal, id)
+  def get_withdraw!(id), do: Repo.get!(Withdraw, id)
 
   @doc """
-  Creates a withdrawal.
+  Creates a withdraw.
 
   ## Examples
 
-      iex> create_withdrawal(%{field: value})
-      {:ok, %Withdrawal{}}
+      iex> create_withdraw(%{field: value})
+      {:ok, %Withdraw{}}
 
-      iex> create_withdrawal(%{field: bad_value})
+      iex> create_withdraw(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
 
-  def create_withdrawal(attrs \\ %{}) do
-    %Withdrawal{}
-    |> Withdrawal.changeset(attrs)
+  def create_withdraw(attrs \\ %{}) do
+    %Withdraw{}
+    |> Withdraw.changeset(attrs)
     |> Repo.insert()
   end
 
   @doc """
-  Updates a withdrawal.
+  Updates a withdraw.
 
   ## Examples
 
-      iex> update_withdrawal(withdrawal, %{field: new_value})
-      {:ok, %Withdrawal{}}
+      iex> update_withdraw(withdraw, %{field: new_value})
+      {:ok, %Withdraw{}}
 
-      iex> update_withdrawal(withdrawal, %{field: bad_value})
+      iex> update_withdraw(withdraw, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_withdrawal(%Withdrawal{} = withdrawal, attrs) do
-    withdrawal
-    |> Withdrawal.changeset(attrs)
+  def update_withdraw(%Withdraw{} = withdraw, attrs) do
+    withdraw
+    |> Withdraw.changeset(attrs)
     |> Repo.update()
   end
 
   @doc """
-  Returns an `%Ecto.Changeset{}` for tracking withdrawal changes.
+  Returns an `%Ecto.Changeset{}` for tracking withdraw changes.
 
   ## Examples
 
-      iex> change_withdrawal(withdrawal)
-      %Ecto.Changeset{data: %Withdrawal{}}
+      iex> change_withdraw(withdraw)
+      %Ecto.Changeset{data: %Withdraw{}}
 
   """
-  def change_withdrawal(%Withdrawal{} = withdrawal, attrs \\ %{}) do
-    Withdrawal.changeset(withdrawal, attrs)
+  def change_withdraw(%Withdraw{} = withdraw, attrs \\ %{}) do
+    Withdraw.changeset(withdraw, attrs)
   end
 
   alias BankingApi.Transactions.Transfer
@@ -171,7 +172,7 @@ defmodule BankingApi.Transactions do
   end
 
   @doc """
-  Executes the `BankingApi.Transactions.Withdrawal.create_transaction` and handles its return.
+  Executes the `BankingApi.Transactions.withdraw.create_transaction` and handles its return.
   In case of success, an email is sent and a new message is sent to every process listening to the topic `"transactions"`.
   In case of failure, there are two possible actions:
   1) The transaction failed because it was already completed (verified by the `idempotency_key`), then the actual completed
@@ -182,14 +183,14 @@ defmodule BankingApi.Transactions do
   is expected to be a string map too, this is necessary because the schemas changeset cannot handle a mixed (key and string) maps
   and this functions injects some data into the `attrs` like `%{"status" => :success}` what makes it necessary to receive string maps.
   """
-  def create_withdrawal_transaction(attrs \\ %{}) do
+  def create_withdraw_transaction(attrs \\ %{}) do
     attrs
     |> Enum.into(%{"status" => :success})
-    |> create_transaction(Withdrawal)
+    |> create_transaction(Withdraw)
   end
 
   @doc """
-  Similar to `create_withdrawal_transaction/1`, but creates a transfer instead
+  Similar to `create_withdraw_transaction/1`, but creates a transfer instead
   """
   def create_transfer_transaction(attrs \\ %{}) do
     attrs
@@ -201,6 +202,7 @@ defmodule BankingApi.Transactions do
     attrs
     |> module.create_transaction()
     |> Repo.transaction()
+    |> TransactionEmail.notify()
     |> handle_transaction(attrs, module)
   end
 
@@ -211,8 +213,8 @@ defmodule BankingApi.Transactions do
      %{transaction: Map.get(data, :transaction), updated_user: Map.get(data, :updated_from_user)}}
   end
 
-  defp handle_transaction({:ok, data}, _, Withdrawal) do
-    broadcast_transaction(Withdrawal, :success, data)
+  defp handle_transaction({:ok, data}, _, withdraw) do
+    broadcast_transaction(withdraw, :success, data)
     {:ok, %{transaction: Map.get(data, :transaction), updated_user: Map.get(data, :updated_user)}}
   end
 
@@ -232,11 +234,11 @@ defmodule BankingApi.Transactions do
   defp handle_transaction(
          {:error, _step, data, _},
          attrs,
-         Withdrawal
+         Withdraw
        ) do
     %{"status" => :fail}
     |> Enum.into(attrs)
-    |> create_withdrawal()
+    |> create_withdraw()
 
     {:error, data}
   end

@@ -11,6 +11,12 @@ defmodule BankingApiWeb.UserView do
   end
 
   def render("user.json", %{user: user}) do
-    %{id: user.id, email: user.email, profile: user.profile, balance: user.balance}
+    %{
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      profile: user.profile,
+      balance: user.balance
+    }
   end
 end

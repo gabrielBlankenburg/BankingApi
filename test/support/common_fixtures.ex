@@ -1,15 +1,17 @@
 defmodule BankingApi.CommonFixtures do
+  @moduledoc false
   alias BankingApi.Accounts
   alias BankingApi.Transactions
 
   @user_attrs %{
     balance: 42,
     email: "user@email.com",
+    name: "Some User",
     password: "some password_hash",
     profile: :user
   }
 
-  @withdrawal_attrs %{amount: 42, idempotency_key: "some idempotency_key", status: :success}
+  @withdraw_attrs %{amount: 42, idempotency_key: "some idempotency_key", status: :success}
 
   @transfer_attrs %{amount: 42, idempotency_key: "some idempotency_key", status: :success}
   def user_fixture(attrs \\ %{}) do
@@ -21,13 +23,13 @@ defmodule BankingApi.CommonFixtures do
     user
   end
 
-  def withdrawal_fixture(attrs \\ %{}) do
-    {:ok, withdrawal} =
+  def withdraw_fixture(attrs \\ %{}) do
+    {:ok, withdraw} =
       attrs
-      |> Enum.into(@withdrawal_attrs)
-      |> Transactions.create_withdrawal()
+      |> Enum.into(@withdraw_attrs)
+      |> Transactions.create_withdraw()
 
-    withdrawal
+    withdraw
   end
 
   def transfer_fixture(attrs \\ %{}) do

@@ -1,12 +1,12 @@
 defmodule BankingApi.Reports.TransactionsCache do
   @moduledoc """
   Caches for the Transactions Reports for specific periods.
-  The periods are based on the transactions `:inserted_at` field.
+  The periods are based on the transactions `:inserted_at` field
   """
   use GenServer
   alias Phoenix.PubSub
   alias BankingApi.Reports
-  alias BankingApi.Transactions.{Transfer, Withdrawal}
+  alias BankingApi.Transactions.{Transfer, Withdraw}
 
   @valid_periods [:daily, :monthly, :yearly, :total]
   @refresh_period 1 * 24 * 60 * 60 * 1000
@@ -66,7 +66,7 @@ defmodule BankingApi.Reports.TransactionsCache do
   # It is called when Phoenix.PubSub broadcasts a new successful transaction this function incremets the new transaction
   # amount instead of refetching every record on database.
   def handle_info({module, :success, %{transaction: transaction}}, state)
-      when module in [Transfer, Withdrawal] do
+      when module in [Transfer, Withdraw] do
     updated_data =
       transaction
       |> get_period_key_by_transaction(state.period)
