@@ -1,6 +1,6 @@
 # Banking Api
 An Elxir api that supports creating accounts, withdrawals and transfers between users.
-The admin users can change user values and also access the backlog, where is possible to get periodical reports about transactions.
+The admin users can change user values and also access the backlog, where is possible to get periodical transaction reports.
 
 ## Technology
 - [Elixir](https://elixir-lang.org/) programming language.
@@ -32,7 +32,7 @@ mix ecto.create
 mix ecto.migrate
 ```
 
-5. Run the seeds so an admin user is generated
+5. Run the seeds so an admin user is generated with login (check the `priv/repo/seeds.exs` to see the email and password)
 
 ``` sh
 mix run priv/repo/seeds.exs
@@ -55,7 +55,6 @@ Now accessing the [dashboard](http://localhost:4000/dashboard/home) must show th
 ## Docs and Tests 
 - For executing the tests, just run `mix test` or for getting the coverage `mix coveralls.html`. 
 - For generating the docs, run `mix docs`.
-
 
 ## How it Works
 ### Contexts
