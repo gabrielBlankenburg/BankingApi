@@ -46,6 +46,10 @@ Now accessing the [dashboard](http://localhost:4000/dashboard/home) must show th
 
 **Note:** It's also possible running with Docker by just executing `docker-compose up -d`.
 
+## Docs and Tests 
+- For executing the tests, just run `mix test` or for getting the coverage `mix coveralls.html`. 
+- For generating the docs, run `mix docs`.
+
 
 ## How it Works
 ### Contexts
@@ -93,3 +97,5 @@ If a transaction fails, the same idempotency key can be sent again.
 | /api/admin/users:id | Updates an user | admin | PATCH |
 | /api/admin/users:id | Deletes an user | admin | DELETE |
 | /api/admin/reports/transaction:id | Total transactions in the :period | admin | GET |
+
+**Note:** the postman.json is a postman collection containing every endpoint example.

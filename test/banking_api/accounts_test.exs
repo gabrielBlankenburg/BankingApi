@@ -10,14 +10,14 @@ defmodule BankingApi.AccountsTest do
 
     @valid_attrs %{
       balance: 42,
-      email: "some email",
+      email: "user@email.com",
       name: "Some User",
       password: "some password_hash",
       profile: :user
     }
     @update_attrs %{
       balance: 43,
-      email: "some updated email",
+      email: "updated_user@email.com",
       name: "Updated User",
       password: "some updated password_hash",
       profile: :admin
@@ -45,7 +45,7 @@ defmodule BankingApi.AccountsTest do
     test "create_user/1 with valid data creates a user" do
       assert {:ok, %User{} = user} = Accounts.create_user(@valid_attrs)
       assert user.balance == 42
-      assert user.email == "some email"
+      assert user.email == "user@email.com"
       refute user.password_hash == "some password_hash"
       assert user.password_hash != nil
       assert user.profile == :user
@@ -59,7 +59,7 @@ defmodule BankingApi.AccountsTest do
       user = user_fixture()
       assert {:ok, %User{} = user} = Accounts.update_user(user, @update_attrs)
       assert user.balance == 43
-      assert user.email == "some updated email"
+      assert user.email == "updated_user@email.com"
       refute user.password_hash == "some updated password_hash"
       assert user.password_hash != nil
       assert user.profile == :admin

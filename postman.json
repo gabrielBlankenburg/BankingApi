@@ -1,0 +1,370 @@
+{
+	"info": {
+		"_postman_id": "2e35d0ce-9055-4630-a8ed-568a896d27db",
+		"name": "Banking Api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "admin",
+			"item": [
+				{
+					"name": "Gets Users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjoiYWRtaW4iLCJhdWQiOiJiYW5raW5nX2FwaSIsImV4cCI6MTYyMDUyMzIxOCwiaWF0IjoxNjE4MTA0MDE4LCJpc3MiOiJiYW5raW5nX2FwaSIsImp0aSI6ImIxNDZmMmVkLTgxZjMtNGVjMS05ZTE4LTVkOTA4OGFhZDBiYSIsIm5iZiI6MTYxODEwNDAxNywic3ViIjoiMiIsInR5cCI6ImFjY2VzcyJ9.1XIUSPNrVHqvrn33xTSuv-SPGWSE8SYM431P5UM0WhnqRTID7_sqFW2j6EkFS_UZV6tvQh9Qptavdxvcx7OIYg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:4000/api/admin/users",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"admin",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Gets Daily Transactions Reports",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjoiYWRtaW4iLCJhdWQiOiJiYW5raW5nX2FwaSIsImV4cCI6MTYyMDUyMzIxOCwiaWF0IjoxNjE4MTA0MDE4LCJpc3MiOiJiYW5raW5nX2FwaSIsImp0aSI6ImIxNDZmMmVkLTgxZjMtNGVjMS05ZTE4LTVkOTA4OGFhZDBiYSIsIm5iZiI6MTYxODEwNDAxNywic3ViIjoiMiIsInR5cCI6ImFjY2VzcyJ9.1XIUSPNrVHqvrn33xTSuv-SPGWSE8SYM431P5UM0WhnqRTID7_sqFW2j6EkFS_UZV6tvQh9Qptavdxvcx7OIYg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:4000/api/admin/reports/transaction/daily?range_start=2021-03-20&range_end=2021-04-04",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"admin",
+								"reports",
+								"transaction",
+								"daily"
+							],
+							"query": [
+								{
+									"key": "range_start",
+									"value": "2021-03-20"
+								},
+								{
+									"key": "range_end",
+									"value": "2021-04-04"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Creates an User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjoiYWRtaW4iLCJhdWQiOiJiYW5raW5nX2FwaSIsImV4cCI6MTYyMDUyMzIxOCwiaWF0IjoxNjE4MTA0MDE4LCJpc3MiOiJiYW5raW5nX2FwaSIsImp0aSI6ImIxNDZmMmVkLTgxZjMtNGVjMS05ZTE4LTVkOTA4OGFhZDBiYSIsIm5iZiI6MTYxODEwNDAxNywic3ViIjoiMiIsInR5cCI6ImFjY2VzcyJ9.1XIUSPNrVHqvrn33xTSuv-SPGWSE8SYM431P5UM0WhnqRTID7_sqFW2j6EkFS_UZV6tvQh9Qptavdxvcx7OIYg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user\": {\n        \"name\": \"John Doe\",\n        \"email\": \"john_doe@email.com\",\n        \"password\": \"123\",\n        \"balance\": 1000,\n        \"profile\": \"user\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:4000/api/admin/users",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"admin",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Gets an User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjoiYWRtaW4iLCJhdWQiOiJiYW5raW5nX2FwaSIsImV4cCI6MTYyMDUyMzIxOCwiaWF0IjoxNjE4MTA0MDE4LCJpc3MiOiJiYW5raW5nX2FwaSIsImp0aSI6ImIxNDZmMmVkLTgxZjMtNGVjMS05ZTE4LTVkOTA4OGFhZDBiYSIsIm5iZiI6MTYxODEwNDAxNywic3ViIjoiMiIsInR5cCI6ImFjY2VzcyJ9.1XIUSPNrVHqvrn33xTSuv-SPGWSE8SYM431P5UM0WhnqRTID7_sqFW2j6EkFS_UZV6tvQh9Qptavdxvcx7OIYg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:4000/api/admin/users/4",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"admin",
+								"users",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Updates an User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjoiYWRtaW4iLCJhdWQiOiJiYW5raW5nX2FwaSIsImV4cCI6MTYyMDUyMzIxOCwiaWF0IjoxNjE4MTA0MDE4LCJpc3MiOiJiYW5raW5nX2FwaSIsImp0aSI6ImIxNDZmMmVkLTgxZjMtNGVjMS05ZTE4LTVkOTA4OGFhZDBiYSIsIm5iZiI6MTYxODEwNDAxNywic3ViIjoiMiIsInR5cCI6ImFjY2VzcyJ9.1XIUSPNrVHqvrn33xTSuv-SPGWSE8SYM431P5UM0WhnqRTID7_sqFW2j6EkFS_UZV6tvQh9Qptavdxvcx7OIYg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user\": {\n        \"name\": \"John Smith Doe\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:4000/api/admin/users/4",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"admin",
+								"users",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deletes an User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjoiYWRtaW4iLCJhdWQiOiJiYW5raW5nX2FwaSIsImV4cCI6MTYyMDUyMzIxOCwiaWF0IjoxNjE4MTA0MDE4LCJpc3MiOiJiYW5raW5nX2FwaSIsImp0aSI6ImIxNDZmMmVkLTgxZjMtNGVjMS05ZTE4LTVkOTA4OGFhZDBiYSIsIm5iZiI6MTYxODEwNDAxNywic3ViIjoiMiIsInR5cCI6ImFjY2VzcyJ9.1XIUSPNrVHqvrn33xTSuv-SPGWSE8SYM431P5UM0WhnqRTID7_sqFW2j6EkFS_UZV6tvQh9Qptavdxvcx7OIYg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:4000/api/admin/users/4",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"admin",
+								"users",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"gabriel@email.com\",\n    \"password\": \"123\"\n}"
+				},
+				"url": {
+					"raw": "localhost:4000/api/login",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"gabriel@email.com\",\n    \"name\": \"Another User\",\n    \"password\": \"123\"\n}"
+				},
+				"url": {
+					"raw": "localhost:4000/api/register",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Withdraw",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjoidXNlciIsImF1ZCI6ImJhbmtpbmdfYXBpIiwiZXhwIjoxNjIwNTI0MDAyLCJpYXQiOjE2MTgxMDQ4MDIsImlzcyI6ImJhbmtpbmdfYXBpIiwianRpIjoiNWJkMTRhY2MtZGQ0MS00MGIwLWI5N2ItNzdlYzE0NmUyOWUzIiwibmJmIjoxNjE4MTA0ODAxLCJzdWIiOiIxIiwidHlwIjoiYWNjZXNzIn0.LVXIqZgorZLl2jriWzvySSQfiMZok48Hmey4-25B8lWFP5LBA6byhf2VZdHHcmUwNj9HJlojRhhABa2Wa2AAag",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"withdraw\": {\n        \"amount\": 1000,\n        \"idempotency_key\": \"testing route 1\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:4000/api/withdraw",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"withdraw"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Transfer",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjoidXNlciIsImF1ZCI6ImJhbmtpbmdfYXBpIiwiZXhwIjoxNjIwNTI0MDAyLCJpYXQiOjE2MTgxMDQ4MDIsImlzcyI6ImJhbmtpbmdfYXBpIiwianRpIjoiNWJkMTRhY2MtZGQ0MS00MGIwLWI5N2ItNzdlYzE0NmUyOWUzIiwibmJmIjoxNjE4MTA0ODAxLCJzdWIiOiIxIiwidHlwIjoiYWNjZXNzIn0.LVXIqZgorZLl2jriWzvySSQfiMZok48Hmey4-25B8lWFP5LBA6byhf2VZdHHcmUwNj9HJlojRhhABa2Wa2AAag",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"transfer\": {\n        \"amount\": 1000,\n        \"idempotency_key\": \"testing route 1\",\n        \"to\": 2\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:4000/api/transfer",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"transfer"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

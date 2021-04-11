@@ -26,7 +26,8 @@ defmodule BankingApi.Accounts.User do
   def changeset(user, attrs) do
     user
     |> cast(attrs, [:name, :email, :password, :profile, :balance])
-    |> validate_required([:email, :name])
+    |> validate_required([:email, :name, :profile, :balance])
+    |> validate_format(:email, ~r/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/)
     |> unique_constraint(:email)
     |> put_password_hash
     |> validate_number(:balance, greater_than_or_equal_to: 0)

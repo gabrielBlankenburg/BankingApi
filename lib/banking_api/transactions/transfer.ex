@@ -48,7 +48,7 @@ defmodule BankingApi.Transactions.Transfer do
   end
 
   @doc """
-  Execute every money transfer database step, if any of them fail, rollback the previous ones.
+  Executes every money transfer database step, if any of them fail, rollbacks the previous ones.
   The steps are:
   1) Attempts to insert the transfer using the `user_changeset/2` validations and checking the "success_idempotency_key" index
   that prevents duplicated `:idempotency_key` with the `:status` field setted as `:success`. If that is the case, there will
