@@ -81,6 +81,38 @@
 					"response": []
 				},
 				{
+					"name": "Gets Daily Transactions Reports Without range",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjoiYWRtaW4iLCJhdWQiOiJiYW5raW5nX2FwaSIsImV4cCI6MTYyMDUyMzIxOCwiaWF0IjoxNjE4MTA0MDE4LCJpc3MiOiJiYW5raW5nX2FwaSIsImp0aSI6ImIxNDZmMmVkLTgxZjMtNGVjMS05ZTE4LTVkOTA4OGFhZDBiYSIsIm5iZiI6MTYxODEwNDAxNywic3ViIjoiMiIsInR5cCI6ImFjY2VzcyJ9.1XIUSPNrVHqvrn33xTSuv-SPGWSE8SYM431P5UM0WhnqRTID7_sqFW2j6EkFS_UZV6tvQh9Qptavdxvcx7OIYg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:4000/api/admin/reports/transaction/monthly",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"admin",
+								"reports",
+								"transaction",
+								"monthly"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Creates an User",
 					"request": {
 						"auth": {
