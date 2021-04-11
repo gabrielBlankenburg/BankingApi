@@ -9,3 +9,5 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
+alias BankingApi.Accounts
+Accounts.create_user(%{name: "admin user", email: "admin@email.com", password: "admin", profile: :admin, balance: 0}) 

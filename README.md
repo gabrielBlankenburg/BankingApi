@@ -32,7 +32,13 @@ mix ecto.create
 mix ecto.migrate
 ```
 
-5. Start the server
+5. Run the seeds so an admin user is generated
+
+``` sh
+mix run priv/repo/seeds.exs
+```
+
+6. Start the server
 ```sh
 mix phx.server
 ```
@@ -44,7 +50,7 @@ iex -S mix phx.server
 
 Now accessing the [dashboard](http://localhost:4000/dashboard/home) must show the server stats.
 
-**Note:** It's also possible running with Docker by just executing `docker-compose up -d`.
+**Note:** It's also possible running with Docker by just executing `docker-compose up -d`. For using docker, change the `config/dev.exs` database `hostname` config to `db`. 
 
 ## Docs and Tests 
 - For executing the tests, just run `mix test` or for getting the coverage `mix coveralls.html`. 
